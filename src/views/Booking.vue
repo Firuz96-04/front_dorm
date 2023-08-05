@@ -14,24 +14,33 @@ const columns = [
     key: "rowIndex",
     title: "#",
     width: 50,
+    fixed: 'left',
   },
   {
     dataIndex: "full_name",
     key: "full_name",
     name: "Студент",
     title: "Студент",
+    width: '17%',
+    fixed: 'left',
   },
   {
     key: "country",
     name: "Страна",
     title: "Страна",
+    width: '13%'
   },
   {
     key: "faculty",
     name: "Факультет",
     title: "Факультет",
+    width: '15%'
   },
   {
+    key: "place",
+    title: "Место проживание",
+    children: [
+    {
     key: "room",
     name: "Комната",
     title: "Комната",
@@ -49,12 +58,47 @@ const columns = [
     title: "Этаж",
     width:50
   },
-  {
-    key: "created_at",
-    name: "Дата Заселение",
-    title: "Дата Заселение",
-    width: 100
+    ]
   },
+
+  {
+    key: 'date',
+    title: 'Дата проживание',
+    children: [
+    {
+    key: 'book_date',
+    name: "начало",
+    title: "начало",
+    width: '10%'
+  },
+  {
+    key: 'book_end',
+    name: "конец",
+    title: "конец",
+    width: '10%'
+  },
+    ]
+  },
+  {
+    key: 'total_price',
+    title: "Стоимость проживание",
+    children: [
+    {
+    key: 'total_price',
+    name: "total_price",
+    title: "Долг",
+    width: '10%'
+  },
+  {
+    key: 'payed',
+    name: "payed",
+    title: "Заплатил",
+    // fixed: 'right',
+    width: '10%'
+  },
+    ]
+  },
+ 
   {
     key: "action",
   },
@@ -68,7 +112,7 @@ const columns = [
     bordered
     :pagination="false"
     size="small"
-    :scroll="{ y: 'calc(100vh - 200px)' }"
+    :scroll="{ y: 'calc(100vh - 200px)', x:1400 }"
   >
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
@@ -115,11 +159,27 @@ const columns = [
           {{ obj.record.room.floor }}
         </span>
       </template>
-      <template v-else-if="obj.column.key === 'created_at'">
+      <template v-else-if="obj.column.key === 'book_date'">
         <span>
-          {{ obj.record.created_at }}
+          {{ obj.record.book_date }}
         </span>
       </template>
+      <template v-else-if="obj.column.key === 'book_end'">
+        <span>
+          {{ obj.record.book_end }}
+        </span>
+      </template>
+      <template v-else-if="obj.column.key === 'total_price'">
+        <span>
+          {{ obj.record.total_price }}
+        </span>
+      </template>
+      <template v-else-if="obj.column.key === 'payed'">
+        <span>
+          {{ obj.record.payed }}
+        </span>
+      </template>
+      
     </template>
     <template #footer>
       <button>xxx</button>
