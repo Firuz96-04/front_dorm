@@ -1,6 +1,7 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { useBookingStore } from "@/store/booking";
+import addModal from '@/components/booking/addModal.vue'
 
 const useBooking = useBookingStore();
 
@@ -8,6 +9,11 @@ const bookings = computed(() => useBooking.getAllBookings);
 
 useBooking.setAllBooking();
 
+const open = ref(false);
+
+const showAddModal = () => {
+  open.value = true
+}
 const columns = [
   {
     dataIndex: "rowIndex",
@@ -16,67 +22,109 @@ const columns = [
     width: 50,
   },
   {
-    dataIndex: "full_name",
-    key: "full_name",
-    name: "Студент",
-    title: "Студент",
+    key: "student",
+    name: "Стедент",
+    title: "Стедент",
+    children: [
+      {
+        dataIndex: "full_name",
+        key: "full_name",
+        name: "Студент",
+        title: "Студент",
+      },
+
+      {
+        key: "country",
+        name: "Страна",
+        title: "Страна",
+      },
+      {
+        key: "faculty",
+        name: "Факультет",
+        title: "Факультет",
+      },
+      {
+        dataIndex: "gender",
+        key: "gender",
+        name: "Пол",
+        title: "Пол",
+        width: "5%",
+      },
+    ],
   },
 
   {
-    key: "country",
-    name: "Страна",
-    title: "Страна",
+    key: "booking_place",
+    name: "Место проживание",
+    title: "Место проживание",
+    children: [
+      {
+        key: "room",
+        name: "Комната",
+        title: "Комната",
+        width: 100,
+      },
+      {
+        key: "building",
+        name: "Здание",
+        title: "Здание",
+        width: 150,
+      },
+      {
+        key: "floor",
+        name: "Этаж",
+        title: "Этаж",
+        width: "5%",
+      },
+    ],
   },
   {
-    key: "faculty",
-    name: "Факультет",
-    title: "Факультет",
+    key: "booking_date",
+    title: "Дата проживание",
+    children: [
+      {
+        key: "book_date",
+        title: "Начало",
+      },
+      {
+        key: "book_end",
+        title: "Конец",
+      },
+    ],
   },
   {
-    key: "room",
-    name: "Комната",
-    title: "Комната",
-    width: 100,
-  },
-  {
-    key: "building",
-    name: "Здание",
-    title: "Здание",
-    width: 150,
-  },
-  {
-    key: "floor",
-    name: "Этаж",
-    title: "Этаж",
-    width: "5%",
-  },
-  {
-    dataIndex: "gender",
-    key: "gender",
-    name: "Пол",
-    title: "Пол",
-    width: '5%'
-  },
-  {
-    key: "created_at",
-    name: "Дата Заселение",
-    title: "Дата Заселение",
-    width: 100,
+    key: "booking_payment",
+    title: "Стоимост проживание",
+    children: [
+      {
+        key: "total_price",
+        name: "Долг",
+        title: "Долг",
+      },
+      {
+        key: "payed",
+        name: "Заплатил",
+        title: "Заплатил",
+      },
+    ],
   },
   {
     key: "action",
   },
 ];
+
 </script>
+
+
 <template>
-  <!-- {{ bookings }} -->
+   <a-button type="primary" @click="showAddModal">Заселить</a-button>
   <a-table
     :dataSource="bookings"
     :columns="columns"
     bordered
     :pagination="false"
     size="small"
-    :scroll="{ y: 'calc(100vh - 200px)', x: '100' }"
+    :scroll="{ y: 'calc(100vh - 200px)', x: 1300 }"
   >
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
@@ -126,11 +174,25 @@ const columns = [
       <template v-else-if="obj.column.key === 'gender'">
         <span v-if="obj.record.gender == 1">М</span>
         <span v-else>Ж</span>
-
       </template>
-      <template v-else-if="obj.column.key === 'created_at'">
+      <template v-else-if="obj.column.key === 'book_date'">
         <span>
-          {{ obj.record.created_at }}
+          {{ obj.record.book_date }}
+        </span>
+      </template>
+      <template v-else-if="obj.column.key === 'book_end'">
+        <span>
+          {{ obj.record.book_end }}
+        </span>
+      </template>
+      <template v-else-if="obj.column.key === 'total_price'">
+        <span>
+          {{ obj.record.total_price }}
+        </span>
+      </template>
+      <template v-else-if="obj.column.key === 'payed'">
+        <span>
+          {{ obj.record.payed }}
         </span>
       </template>
     </template>
@@ -138,4 +200,12 @@ const columns = [
       <button>xxx</button>
     </template>
   </a-table>
+
+  <Teleport to="body">
+    <a-modal
+    :maskClosable="false" v-model:visible="open" footer=""  >
+        <addModal @close="closeAdd"> </addModal>
+    </a-modal>
+  </Teleport>
+
 </template>

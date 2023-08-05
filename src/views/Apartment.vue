@@ -1,13 +1,20 @@
 <script setup>
 import {ref, reactive, computed} from 'vue'
 import { useRoomStore } from "@/store/room";
+
+import addModal from '@/components/apartment/addModal.vue'
+
+
+
 import { storeToRefs } from "pinia";
 
 const roomStore = useRoomStore()
 
+const open = ref(false)
 const rooms = computed(() => roomStore.getAllRoom)
-roomStore.setAllRoom()
 
+
+roomStore.setAllRoom()
 
 const setRowClassName = (record, index) => {
   if (!record.is_full) {
@@ -20,6 +27,14 @@ const setRowClassName = (record, index) => {
 const showKeys = (record) => {
   // console.log(record);
   return 1
+}
+
+const addRoom = () => {
+  open.value = true
+}
+
+const closeAdd = () => {
+  open.value = false
 }
 const columns = [
   {
@@ -59,7 +74,7 @@ const columns = [
         width: 200,
     },
     {
-        title: 'Этаж',
+        title: 'Этажност',
         dataIndex: 'building_floor_count',
         key: 'building_floor_count',
         width: 100,
@@ -74,6 +89,7 @@ const columns = [
 
 </script>
 <template>
+<a-button @click="addRoom">Добавит комнату</a-button>
 
 <a-table
     :data-source="rooms"
@@ -123,6 +139,13 @@ const columns = [
     </template>
     <template #footer>Footer</template>
   </a-table>
+
+  <Teleport to="body">
+    <a-modal
+    :maskClosable="false" v-model:visible="open" footer="" width="400px"  >
+        <addModal @close="closeAdd"> </addModal>
+    </a-modal>
+  </Teleport>
 
 </template>
 
