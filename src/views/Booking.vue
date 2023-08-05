@@ -21,6 +21,7 @@ const columns = [
     name: "Студент",
     title: "Студент",
   },
+
   {
     key: "country",
     name: "Страна",
@@ -35,25 +36,32 @@ const columns = [
     key: "room",
     name: "Комната",
     title: "Комната",
-    width:100
+    width: 100,
   },
   {
     key: "building",
     name: "Здание",
     title: "Здание",
-    width: 150
+    width: 150,
   },
   {
     key: "floor",
     name: "Этаж",
     title: "Этаж",
-    width:50
+    width: "5%",
+  },
+  {
+    dataIndex: "gender",
+    key: "gender",
+    name: "Пол",
+    title: "Пол",
+    width: '5%'
   },
   {
     key: "created_at",
     name: "Дата Заселение",
     title: "Дата Заселение",
-    width: 100
+    width: 100,
   },
   {
     key: "action",
@@ -68,7 +76,7 @@ const columns = [
     bordered
     :pagination="false"
     size="small"
-    :scroll="{ y: 'calc(100vh - 200px)' }"
+    :scroll="{ y: 'calc(100vh - 200px)', x: '100' }"
   >
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
@@ -114,6 +122,11 @@ const columns = [
         <span>
           {{ obj.record.room.floor }}
         </span>
+      </template>
+      <template v-else-if="obj.column.key === 'gender'">
+        <span v-if="obj.record.gender == 1">М</span>
+        <span v-else>Ж</span>
+
       </template>
       <template v-else-if="obj.column.key === 'created_at'">
         <span>
