@@ -203,7 +203,7 @@ const columns = [
 
   <Teleport to="body">
     <a-modal
-    :maskClosable="false" v-model:visible="open" footer=""  >
+    :maskClosable="false" v-model:open="open" footer=""  >
         <addModal @close="closeAdd"> </addModal>
     </a-modal>
   </Teleport>

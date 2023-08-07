@@ -13,21 +13,13 @@
     </a-layout>
   </a-layout>
 </template>
-<script>
+<script setup>
 import { defineComponent, ref } from 'vue';
 import HeaderVue from '@/layouts/Header.vue'
 import SidebarVue from '@/layouts/Sidebar.vue'
-export default defineComponent({
-  components: {
-    HeaderVue,
-    SidebarVue
-  },
-  setup() {
-    return {
-      collapsed: ref(false),
-    };
-  },
-});
+
+
+    console.log('main message');
 </script>
 
 

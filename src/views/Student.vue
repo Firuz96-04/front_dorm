@@ -15,50 +15,59 @@ const columns = [
     title: "Имя",
     dataIndex: "name",
     key: "name",
+    align: 'center'
   },
   {
     name: "Фамилия",
     dataIndex: "last_name",
     key: "last_name",
+    align: 'center'
   },
   {
     name: "Страна",
     dataIndex: "country",
     key: "country",
+    align: 'center'
   },
   {
     name: "Факультет",
     dataIndex: "faculty",
     key: "faculty",
+    align: 'center'
   },
   {
     name: "Телефон",
     dataIndex: "phone",
     key: "phone",
+    align: 'center'
   },
   {
-    name: "Дата рождение",
+    name: "Дата рождения",
     dataIndex: "born",
     key: "born",
-    width: 100
+    width: 100,
+    align: 'center'
   },
   {
     name: "Тип студента",
     dataIndex: "student_type",
     key: "student_type",
+    align: 'center'
   },
 
   {
     name: "Курс",
     dataIndex: "course",
     key: "course",
-    width: 50
+    width: 50,
+    align: 'center'
   },
   {
     name: "Пол",
     dataIndex: "gender",
     key: "gender",
-    width: 50
+    width: 50,
+    align: 'center'
   },
   {
     key: "action",
@@ -154,6 +163,10 @@ const students = computed(() => studentStore.getAllStudent )
 <style scoped>
 .ant-table-tbody .ant-table-row:nth-child(even) {
   background-color: gray;
+}
+
+.ant-table-tbody >tr >td {
+  background-color: rgb(40, 40, 191); 
 }
 
 </style>

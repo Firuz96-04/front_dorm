@@ -18,52 +18,52 @@ const routes = [
         },
         children: [
             {
-                path: '',
+                path: '/main',
                 name: 'main',
                 component: () => import('@/views/Home.vue')
             },
             {
-                path: 'booking',
+                path: '/booking',
                 name: 'booking',
                 component: () => import('@/views/Booking.vue')
             },
             {
-                path: 'student',
+                path: '/student',
                 name: 'student',
                 component: () => import('@/views/Student.vue')
             },
             {
-                path: 'faculty',
+                path: '/faculty',
                 name: 'faculty',
                 component: () => import('@/views/Faculty.vue')
             },
             {
-                path: 'country',
+                path: '/country',
                 name: 'country',
                 component: () => import('@/views/Country.vue')
             },
             {
-                path: 'principal',
+                path: '/principal',
                 name: 'principal',
                 component: () => import('@/views/Principal.vue')
             },
             {
-                path: 'apartment',
+                path: '/apartment',
                 name: 'apartment',
                 component: () => import('@/views/Apartment.vue')
             },
             {
-                path: 'building',
+                path: '/building',
                 name: 'building',
                 component: () => import('@/views/Building.vue')
             },
             {
-                path: 'building',
+                path: '/building',
                 name: 'building',
                 component: () => import('@/views/Building.vue')
             },
             {
-                path: 'privilege',
+                path: '/privilege',
                 name: 'privilege',
                 component: () => import('@/views/Privilege.vue')
             },
@@ -73,9 +73,8 @@ const routes = [
 ]
 
 const router = createRouter({
-    history: createWebHistory(),
-    routes: routes
-
+    history: createWebHistory(import.meta.env.BASE_URL),
+    routes: routes,
 })
 
 

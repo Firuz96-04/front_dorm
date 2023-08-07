@@ -19,11 +19,13 @@ export const useRoomStore = defineStore('room', {
 
        async addRoom(obj) {
         try {
-            const res = await http.post('/api/room')
+            const res = await http.post('/api/room', obj.room)
             const data = await res.data
             this.rooms.push(data)
+            obj.cb()
         } catch (error) {
-            console.log(error);
+            console.log(error, 'error');
+
         }
             
         }

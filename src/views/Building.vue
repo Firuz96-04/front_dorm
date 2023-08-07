@@ -9,43 +9,31 @@ buildingStore.setAllBuilding();
 const buildings = computed(() => buildingStore.allBuilding);
 const open = ref(false);
 
-  const goo = () => {
+  const showAddModal = () => {
     open.value = true;
     };
-
-const dataSource = [
-  {
-    key: "1",
-    name: "Mike",
-    age: 32,
-    address: "10 Downing Street",
-  },
-  {
-    key: "2",
-    name: "John",
-    age: 42,
-    address: "10 Downing Street",
-  },
-];
 
 const columns = [
   {
     dataIndex: "name",
     key: "name",
+    width: 200
   },
   {
     dataIndex: "principal",
     key: "principal",
     title: "Комендант",
-    width:'200px'
+    width: 200
   },
   {
     dataIndex: "floor",
     key: "floor",
     title: "Кол. этаж",
+    width: 100
   },
   {
     key: "action",
+    width: 100
   },
 ];
 const closeAdd = () => open.value = false
@@ -54,8 +42,10 @@ const closeAdd = () => open.value = false
 </script>
 
 <template>
-  <button @click="goo" class="btn"> click</button>
-   <a-table
+
+  <div style="width: 800px; margin: 0 auto;">
+    <a-button type="text" style="background-color: #7678ed; color: #fff; font-weight: 500;" @click="showAddModal">Добавит</a-button>
+    <a-table
     :dataSource="buildings"
     :columns="columns"
     bordered
@@ -88,9 +78,10 @@ const closeAdd = () => open.value = false
         <button>xxx</button>
     </template>
   </a-table>
+  </div>
   <Teleport to="body">
     <a-modal
-    :maskClosable="false" v-model:visible="open" footer=""  >
+    :maskClosable="false" v-model:open="open" footer=""  >
         <addModal @close="closeAdd"> </addModal>
     </a-modal>
   </Teleport>

@@ -36,35 +36,44 @@ const addRoom = () => {
 const closeAdd = () => {
   open.value = false
 }
+
+const closeEvent = () => {
+    open.value = false
+}
 const columns = [
   {
     dataIndex: "rowIndex",
     key: "rowIndex",
-    width: 50
+    width: 50,
+    align: 'center'
   },
   {
     name: "Номер",
     title: "Номер",
     dataIndex: "number",
     key: "number",
-    width: 100
+    width: 100,
+    align: 'center'
   },
   {
     name: "Этаж",
     dataIndex: "floor",
     key: "floor",
-    width: 50
+    width: 50,
+    align: 'center'
   },
   {
     name: "Тип комнаты",
     dataIndex: "room_type",
     key: "room_type",
-    width: 100
+    width: 100,
+    align: 'center'
   },
   {
     name: "Здание",
     dataIndex: "building",
     key: "building",
+    align: 'center',
     // width: 150,
     children: [
     {
@@ -72,12 +81,14 @@ const columns = [
         dataIndex: 'building_name',
         key: 'building_name',
         width: 200,
+        align: 'center'
     },
     {
         title: 'Этажност',
         dataIndex: 'building_floor_count',
         key: 'building_floor_count',
         width: 100,
+        align: 'center'
     }
     ]
   },
@@ -142,7 +153,7 @@ const columns = [
 
   <Teleport to="body">
     <a-modal
-    :maskClosable="false" v-model:visible="open" footer="" width="400px"  >
+    :maskClosable="false" v-model:open="open" footer="" width="400px" @close="closeEvent"  >
         <addModal @close="closeAdd"> </addModal>
     </a-modal>
   </Teleport>

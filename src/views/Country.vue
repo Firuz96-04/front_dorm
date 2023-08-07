@@ -103,9 +103,8 @@ const {total} = storeToRefs(countryStore)
       </a-table-summary>
     </template>
   </a-table>
-
   <Teleport to="body">
-    <a-modal :maskClosable="false" v-model:visible="addOpen" :footer="null">
+    <a-modal :maskClosable="false" v-model:open="addOpen" :footer="null">
       <addModal @close="handleClose"></addModal>
     </a-modal>
   </Teleport>

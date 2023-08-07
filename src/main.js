@@ -1,11 +1,13 @@
 import { createApp } from 'vue'
-
 import App from './App.vue'
 import { createPinia } from 'pinia'
 import router from './router'
 import Antd from "ant-design-vue";
-import "ant-design-vue/dist/antd.css";
+
 import '../src/assets/styles/style.css'
+import 'ant-design-vue/dist/reset.css';
+
+
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { faUserSecret, faUsers, faGlobe, faBuilding, faDoorClosed,
