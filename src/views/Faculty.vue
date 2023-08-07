@@ -1,11 +1,12 @@
 <script setup>
 import { useFacultyStore } from "@/store/faculty";
-import {computed } from "vue";
+import {computed, ref } from "vue";
 import {storeToRefs} from 'pinia'
-import { PlusOutlined, FileExcelOutlined } from "@ant-design/icons-vue"
+import { PlusOutlined, FileExcelFilled } from "@ant-design/icons-vue"
+import addModal from '@/components/faculty/addModal.vue'
 
 const facultyStore = useFacultyStore();
-
+const addIsModal = ref(false)
 facultyStore.facultyTotal();
 const faculties = computed(() => facultyStore.allFacultyTotal);
 
@@ -25,7 +26,7 @@ const columns = [
     key: "students",
     children: [
       {
-      name: "Не Заселены",
+      name: "Кол. студентов",
       dataIndex: "student_count",
       key: "student_count",
       align: "center",
@@ -47,6 +48,13 @@ const columns = [
     width: 100,
   },
 ];
+
+const showAddModal = () => addIsModal.value = true
+
+const closeAddModal = () => addIsModal.value = false
+const exportToExcel = () => {
+  alert('Excel')
+}
 </script>
 <template>
 
@@ -86,13 +94,13 @@ const columns = [
       </template>
       <template v-else-if="column.dataIndex === 'action'"> </template>
     </template>
-    <!-- <template #footer>Footer</template> -->
+    <template #footer>Footer</template>
     <template #summary>
       <a-table-summary fixed>
         <a-table-summary-row>
           <a-table-summary-cell :index="0"> </a-table-summary-cell>
-          <a-table-summary-cell :index="1">{{ total.student_total }}</a-table-summary-cell>
-          <a-table-summary-cell :index="2">{{ total.book_total }}</a-table-summary-cell>
+          <a-table-summary-cell :index="1"><div style="text-align: center; font-size: 14px; font-weight: 500;"> {{ total.student_total }}</div> </a-table-summary-cell>
+          <a-table-summary-cell :index="2"><div style="text-align: center; font-size: 14px; font-weight: 500;">{{ total.book_total }}</div></a-table-summary-cell>
         </a-table-summary-row>
       </a-table-summary>
     </template>
@@ -100,7 +108,7 @@ const columns = [
       <div>
         <a-row>
           <a-col :span="5">
-              <a-button type="text" style="background-color: #168aad; width: 50px; color: #fff; font-size: 18px; line-height: 16px;">
+              <a-button @click="showAddModal" type="text" style="background-color: #168aad; width: 50px; color: #fff; font-size: 18px; line-height: 16px;">
                 <template #icon>
                   <PlusOutlined style="font-size: 18px; line-height: 18px" />
                 </template>
@@ -108,20 +116,18 @@ const columns = [
           </a-col>
           <a-col :span="14">col-8</a-col>
           <a-col :span="5">
-            <div style="display: flex; justify-content: center;">
-            <a-button type="text" style="background-color: #008000; display: block;">
-                <template #icon>
-                  <FileExcelOutlined style="font-size: 18px; line-height: 18px; color: #fff;"  />
-                </template>
-              </a-button>
+            <div style="display: flex; height: 100%; align-items: center; justify-content: flex-end; ">
+                  <FileExcelFilled @click="exportToExcel" style="font-size: 26px; line-height: 18px; color: #77af36; cursor: pointer;"   />
             </div>
-            </a-col>
+          </a-col>
             
         </a-row>
       </div>
     </template>
   </a-table>
-  
+  <Teleport to="body">
+    <addModal :my_open="addIsModal" @close="closeAddModal"/>
+  </Teleport>
 </template>
 <style scoped>
 .my_table {

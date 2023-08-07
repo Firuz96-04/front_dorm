@@ -10,7 +10,7 @@ import { storeToRefs } from "pinia";
 
 const roomStore = useRoomStore()
 
-const open = ref(false)
+const addIsModal = ref(false)
 const rooms = computed(() => roomStore.getAllRoom)
 
 
@@ -30,11 +30,11 @@ const showKeys = (record) => {
 }
 
 const addRoom = () => {
-  open.value = true
+  addIsModal.value = true
 }
 
 const closeAdd = () => {
-  open.value = false
+  addIsModal.value = false
 }
 
 const closeEvent = () => {
@@ -59,7 +59,7 @@ const columns = [
     name: "Этаж",
     dataIndex: "floor",
     key: "floor",
-    width: 50,
+    width: 100,
     align: 'center'
   },
   {
@@ -77,10 +77,10 @@ const columns = [
     // width: 150,
     children: [
     {
-        title: 'Название',
+        title: 'Названия',
         dataIndex: 'building_name',
         key: 'building_name',
-        width: 200,
+        width: 250,
         align: 'center'
     },
     {
@@ -95,6 +95,7 @@ const columns = [
   {
     key: "action",
     dataIndex: "action",
+    width: 150,
   },
 ];
 
@@ -152,15 +153,12 @@ const columns = [
   </a-table>
 
   <Teleport to="body">
-    <a-modal
-    :maskClosable="false" v-model:open="open" footer="" width="400px" @close="closeEvent"  >
-        <addModal @close="closeAdd"> </addModal>
-    </a-modal>
+        <addModal :my_open="addIsModal" @close="closeAdd"> </addModal>
   </Teleport>
 
 </template>
 
-<style>
+<style scoped>
 .ant-table-cell {
   padding: 0;
   margin: 0;
@@ -175,12 +173,12 @@ const columns = [
 
 }
 
-.my_style {
+.my_table {
   background-color: #bbd;
+  width: 60%;
+  margin: 0 auto;
 }
-.my_style2 {
-  background-color: #ddd123;
-}
+
 /* .ant-table-cell{
   background-color: #bbd; */
 /* } */

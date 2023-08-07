@@ -46,14 +46,14 @@ const routers = [
 ];
 
 onMounted(() => {
-  console.log(route.params,' route');
-  console.log(route.name,' route');
+  // console.log(route.params,' route');
+  // console.log(route.name,' route');
 })
 
 computed(() => {
   console.log(route.name,' computed');
 })
-console.log('message');
+
 </script>
 
 <style lang="scss" scoped>

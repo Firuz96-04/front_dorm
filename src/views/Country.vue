@@ -3,32 +3,47 @@ import { ref, computed } from "vue";
 import { useCountryStore } from "@/store/country";
 import { storeToRefs } from "pinia";
 import addModal from "@/components/country/addModal.vue";
-import { EditOutlined, DeleteOutlined } from "@ant-design/icons-vue"
-
+import { EditOutlined, DeleteOutlined, PlusOutlined, FileExcelFilled } from "@ant-design/icons-vue"
 const countryStore = useCountryStore();
-const addOpen = ref(false);
+
 const columns = [
   {
     name: "Страны",
     title: "Страны",
     dataIndex: "name",
     key: "name",
+    align: "center",
+    width:200
   },
-  {
-    name: "Студенты",
-    dataIndex: "student_count",
-    key: "student_count",
-  },
-  {
-    name: "Заселены",
-    dataIndex: "booking_count",
-    key: "booking_count",
-  },
+    {
+    dataIndex: "students",
+    title: "Студенты",
+    key: "students",
+    children: [
+        {
+        name: "Кол. студентов",
+        dataIndex: "student_count",
+        key: "student_count",
+        align: "center",
+        width:120
+      },
+      {
+        name: "Заселены",
+        dataIndex: "booking_count",
+        key: "booking_count",
+        align: "center",
+        width:120
+      },
+    ]
+    },
+  
   {
     key: "action",
     dataIndex: "action",
+    width:100
   },
 ];
+const addIsModal = ref(false)
 countryStore.countryTotal();
 
 const add = () => {
@@ -36,17 +51,17 @@ const add = () => {
 };
 const countries = computed(() => countryStore.allCountryTotal);
 const handleOpen = () => {
-  addOpen.value = true;
+  addIsModal.value = true;
 };
 const handleClose = () => {
-  addOpen.value = false;
+  console.log('handleClose');
+  addIsModal.value = false;
 };
 
 const {total} = storeToRefs(countryStore)
 </script>
 
 <template>
-  <button @click="handleOpen">open</button>
   <a-table
     :columns="columns"
     :data-source="countries"
@@ -70,7 +85,7 @@ const {total} = storeToRefs(countryStore)
 
     <template #bodyCell="{ column, text }">
       <template v-if="column.dataIndex === 'name'">
-        <span>{{ text }}</span>
+        <div style="text-align: left"><span>{{ text }}</span></div>
       </template>
       <template v-else-if="column.dataIndex === 'student_count'">
         <span>{{ text }}</span>
@@ -102,17 +117,38 @@ const {total} = storeToRefs(countryStore)
         </a-table-summary-row>
       </a-table-summary>
     </template>
+    <template #title>
+      <div>
+        <a-row>
+          <a-col :span="5">
+              <a-button @click="handleOpen" type="text" style="background-color: #168aad; width: 50px; color: #fff; font-size: 18px; line-height: 16px;">
+                <template #icon>
+                  <PlusOutlined style="font-size: 18px; line-height: 18px" />
+                </template>
+              </a-button>
+          </a-col>
+          <a-col :span="14">col-8</a-col>
+          <a-col :span="5">
+            <div style="display: flex; height: 100%; align-items: center; justify-content: flex-end; ">
+                  <FileExcelFilled  style="font-size: 26px; line-height: 18px; color: #77af36; cursor: pointer;"   />
+            </div>
+          </a-col>
+            
+        </a-row>
+      </div>
+    </template>
   </a-table>
   <Teleport to="body">
-    <a-modal :maskClosable="false" v-model:open="addOpen" :footer="null">
-      <addModal @close="handleClose"></addModal>
-    </a-modal>
+    
+      <addModal :my_open="addIsModal" @close="handleClose"></addModal>
+
   </Teleport>
 </template>
 
 <style scoped>
 .my_table {
-  width: 50% !important;
+  width: 60%;
+  margin: 0 auto;
 }
 .ant-table-tbody tr {
   cursor: pointer;

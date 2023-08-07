@@ -17,9 +17,6 @@
 import { defineComponent, ref } from 'vue';
 import HeaderVue from '@/layouts/Header.vue'
 import SidebarVue from '@/layouts/Sidebar.vue'
-
-
-    console.log('main message');
 </script>
 
 

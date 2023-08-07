@@ -33,9 +33,10 @@ export const useFacultyStore = defineStore('faculty', {
 
         async addFaculty(obj){
             try {
-                const res = await http.post('/api/faculty', obj)
+                const res = await http.post('/api/faculty', obj.faculty)
                 const data = await res.data
                 this.faculty_total.push({...data,  student_count: 0, booking_count: 0})  
+                obj.cb()
             } catch (error) {
                 console.log(error);
             }
