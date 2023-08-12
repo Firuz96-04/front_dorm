@@ -2,7 +2,7 @@
 import { ref, reactive, computed } from "vue";
 import { useBookingStore } from "@/store/booking";
 import addModal from '@/components/booking/addModal.vue'
-
+import { PlusOutlined, FileExcelFilled, PlusSquareOutlined } from "@ant-design/icons-vue"
 const useBooking = useBookingStore();
 
 const bookings = computed(() => useBooking.getAllBookings);
@@ -19,62 +19,75 @@ const columns = [
     dataIndex: "rowIndex",
     key: "rowIndex",
     title: "#",
-    width: 50,
+    fixed:'left',
+    width: 40,
+    align: "center"
   },
   {
     key: "student",
-    name: "Стедент",
-    title: "Стедент",
+    name: "Студент",
+    title: "Студент",
     children: [
       {
         dataIndex: "full_name",
         key: "full_name",
         name: "Студент",
         title: "Студент",
+        fixed:'left',
+        align: "center",
+        width: 200,
       },
 
       {
         key: "country",
         name: "Страна",
         title: "Страна",
+        align: "center",
+        width: 150,
       },
       {
         key: "faculty",
         name: "Факультет",
         title: "Факультет",
+        align: "center",
+        width: 150,
       },
       {
         dataIndex: "gender",
         key: "gender",
         name: "Пол",
         title: "Пол",
-        width: "5%",
+        align: "center",
+        width: 50,
       },
     ],
   },
 
   {
     key: "booking_place",
-    name: "Место проживание",
-    title: "Место проживание",
+    name: "Место проживания",
+    title: "Место проживания",
     children: [
       {
         key: "room",
         name: "Комната",
         title: "Комната",
         width: 100,
+        align: "center"
       },
       {
         key: "building",
         name: "Здание",
         title: "Здание",
         width: 150,
+        align: "center"
       },
       {
         key: "floor",
         name: "Этаж",
         title: "Этаж",
-        width: "5%",
+        width: 50,
+        align: "center"
       },
     ],
   },
@@ -85,10 +98,12 @@ const columns = [
       {
         key: "book_date",
         title: "Начало",
+        align: "center"
       },
       {
         key: "book_end",
         title: "Конец",
+        align: "center"
       },
     ],
   },
@@ -100,19 +115,31 @@ const columns = [
         key: "total_price",
         name: "Долг",
         title: "Долг",
+        align: "center"
       },
       {
         key: "payed",
-        name: "Заплатил",
-        title: "Заплатил",
+        name: "Оплатил",
+        title: "Оплатил",
+        align: "center"
       },
     ],
   },
   {
     key: "action",
+    title: "!!!",
+    width: 80
   },
 ];
 
+const closeAdd = () => {
+  open.value = false
+}
+const message = ref('tttt')
+
+const localeConfig = ref({
+  emptyText: 'refresh page'
+});
 </script>
 
 
@@ -122,10 +149,12 @@ const columns = [
     :dataSource="bookings"
     :columns="columns"
     bordered
+    :locale="localeConfig"
     :pagination="false"
     size="small"
-    :scroll="{ y: 'calc(100vh - 200px)', x: 1300 }"
+    :scroll="{ y: 'calc(100vh - 200px)', x: 1400 }"
   >
+
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
         <span> {{ column.name }} </span>

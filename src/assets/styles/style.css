@@ -24,6 +24,13 @@
   .ant-table-tbody > tr > td {
     /* font-weight: 500; */
   }
+/* 
+  .ant-table-tbody{
+    padding: 8px !important;
+  }
+  .ant-table-tbody > tr > td{
+    padding: 8px !important;
+  } */
 
   .ant-table-wrapper .ant-table.ant-table-small .ant-table-title {
     padding: 5px 5px

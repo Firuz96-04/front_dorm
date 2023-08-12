@@ -6,6 +6,7 @@ import addModal from "@/components/privilege/addModal.vue";
 
 const privilegeStore = usePrivilegeStore()
 
+const addIsModal = ref(false)
 
 const privileges = computed(() => privilegeStore.getAllPrivilege)
 privilegeStore.setAllPrivilege()
@@ -41,8 +42,13 @@ const columns = [
 ];
 
 const handleOpen = () => {
-
+    addIsModal.value = true
 }
+
+const closeAddModal = () => {
+    addIsModal.value = false
+    console.log('vvvvv');
+    }
 </script>
 <template>
 
@@ -105,7 +111,7 @@ const handleOpen = () => {
 
 
   <Teleport to="body">
-        <addModal />
+        <addModal :my_open="addIsModal" @close="closeAddModal" />
   </Teleport>
 </template>
 

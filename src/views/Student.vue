@@ -1,21 +1,22 @@
 <script setup>
 import {ref, reactive, computed} from 'vue'
 import { useStudentStore } from "@/store/student";
-import { storeToRefs } from "pinia";
-
+import addModal from '@/components/student/addModal.vue'
 
 const columns = [
 {
     dataIndex: "rowIndex",
     key: "rowIndex",
-    width: 50
+    width: 50,
+    fixed: 'left'
   },
   {
     name: "Имя",
     title: "Имя",
     dataIndex: "name",
     key: "name",
-    align: 'center'
+    align: 'center',
+    fixed: 'left'
   },
   {
     name: "Фамилия",
@@ -77,13 +78,24 @@ const columns = [
 
 const studentStore = useStudentStore()
 
-studentStore.setAllFaculty()
-
+studentStore.setAllStudent()
+const addIsModal = ref(false)
 
 const students = computed(() => studentStore.getAllStudent )
 
+const showAdd = () => {
+  addIsModal.value = true
+}
+
 </script>
 <template>
+  <a-button @click="showAdd"> add</a-button>
+<!-- 
+  <Teleport to="body"> -->
+      <addModal v-if="addIsModal"  :visible="addIsModal"/>
+
+      <!-- :visible="addIsModal" -->
+  <!-- </Teleport> -->
 <a-table
     class="custom-table"
     :data-source="students"

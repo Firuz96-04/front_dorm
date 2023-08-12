@@ -103,7 +103,7 @@ const columns = [
 <template>
 <a-button @click="addRoom">Добавит комнату</a-button>
 
-<a-table
+<!-- <a-table
     :data-source="rooms"
     bordered
     :columns="columns"
@@ -150,11 +150,11 @@ const columns = [
       </template>
     </template>
     <template #footer>Footer</template>
-  </a-table>
+  </a-table> -->
 
-  <Teleport to="body">
+  <!-- <Teleport to="body">
         <addModal :my_open="addIsModal" @close="closeAdd"> </addModal>
-  </Teleport>
+  </Teleport> -->
 
 </template>
 
@@ -175,7 +175,7 @@ const columns = [
 
 .my_table {
   background-color: #bbd;
-  width: 60%;
+  width: 80%;
   margin: 0 auto;
 }
 

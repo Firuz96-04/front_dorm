@@ -16,6 +16,12 @@ export const useBookingStore = defineStore('booking', {
                 const res = await http.get('/api/booking')
                 const json = await res.data
                 this.bookings = json.data
+            },
+
+            async addBook(obj) {
+                const res = await http.post('/api/booking')
+                const json = await res.data
+                console.log(json);
             }
         }
 })

@@ -20,8 +20,8 @@ const privilegeStore = usePrivilegeStore();
 
 const addPrivilege = () => {
     privilegeStore.addPrivilege({
-    data: formState,
-    cb: closeModal,
+      privilege: formState,
+      cb: closeModal,
   });
 
 };
@@ -43,25 +43,26 @@ const closeModal = () => {
     width="400px"
   >
     <a-form :model="formState"
-        class="my_form" 
+
         :label-col="{ span: 5 }"
-        :wrapper-col="{ span: 15 }"
+        :wrapper-col="{ span: 18 }"
         @submit.prevent="addPrivilege"
+        style="max-width: 600px"
     >
       <a-form-item label="Названия">
         <a-input
           v-model:value="formState.name"
-          :maxlength="25"
-          style="width: 250px"
+          :maxlength="50"
+          placeholder="Названия"
         />
       </a-form-item>
-      <a-form-item label="Названия">
+      <a-form-item label="Описания">
         <a-textarea   
             v-model:value="formState.description"
-            :maxlength="25"
-            style="width: 300px" 
-            placeholder="Basic usage" 
-            :rows="4" />
+            :rows="5"
+            :maxlength="100"
+            placeholder="Описания" 
+             />
       </a-form-item>
       <a-form-item :wrapper-col="{ offset: 15 }">
           <a-button type="primary" html-type="submit">Добавить</a-button>

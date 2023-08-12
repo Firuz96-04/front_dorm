@@ -1,42 +1,54 @@
 <script setup>
+import {ref, reactive, computed} from 'vue'
+import qs from 'qs';
+import { useStudentStore } from "@/store/student";
+import {useBookingStore} from '@/store/booking'
 
+const formState = reactive({
+  student: null,
+  room: null,
+  privilege: 1
+})
+
+const value1 = ref(null)
+const bookStore = useBookingStore()
+const studentStore = useStudentStore()
+
+const handleChange = value => {
+  console.log(`selected ${value}`);
+};
+
+const filterOption = (input, option) => {
+  
+  return option.name.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+};
+
+const handleSearch = (elem) => {
+  studentStore.setAllStudent(name=elem)
+  console.log('bbb');
+  console.log(elem);
+}
+const students = computed(() => studentStore.getAllStudent)
+const value = ref(undefined);
 </script>
 
 <template>
   <div style="margin-top: 25px;">
-    <a-form
-      :model="formState"
-      name="basic"
-      :label-col="{ span: 8 }"
-      :wrapper-col="{ span: 16 }"
-      autocomplete="off">
-
-    </a-form>
-    <a-form-item
-      label="Username"
-      name="username"
-    >
-      <a-input />
-    </a-form-item>
-
     <a-select
-    v-model:value="value"
-    show-search
-    placeholder="input search text"
-    style="width: 200px"
-    :default-active-first-option="false"
-    :show-arrow="false"
-    :filter-option="false"
-    :not-found-content="null"
-    :options="data"
-    @search="handleSearch"
-    @change="handleChange"
+      v-model:value="formState.student"
+      show-search
+      :allowClear="true"
+      placeholder="Select a person"
+      style="width: 200px"
+      :options="students"
+      :field-names="{ value: 'id', label: 'name' }"
+      :filter-option="filterOption"
+      @change="handleChange"
+      @search="handleSearch"
   ></a-select>
-
-
-    <a-form-item name="date-picker" label="DatePicker" v-bind="config">
-      <a-date-picker  value-format="YYYY-MM-DD" />
-    </a-form-item>
+  <a-range-picker v-model:value="value1"  picker="date"/>
+  {{ value1 }}
+  {{ formState.student }}
   </div>
 </template>
 

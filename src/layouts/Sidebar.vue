@@ -35,6 +35,7 @@ const router = useRouter()
 const route = useRoute()
 const routers = [
   { name: "Главная", path: "/main", icon: "fa-solid fa-house" },
+  { name: "Free", path: "/free-place", icon: "fa-user-plus" },
   { name: "Заселить", path: "/booking", icon: "fa-user-plus" },
   { name: "Студенты", path: "/student", icon: "fa-solid fa-users" },
   { name: "Факультеты", path: "/faculty", icon: "fa-landmark" },

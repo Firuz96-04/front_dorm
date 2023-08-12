@@ -13,8 +13,11 @@ export const useStudentStore = defineStore('student', {
     },
 
     actions: {
-       async setAllFaculty() {
-            const res = await http.get('/api/student')
+       async setAllStudent(name=null) {
+            const res = await http.get(`/api/student`, { 
+                params: { name: name }
+            
+            })
             const data = await res.data.results
             this.students = data
             console.log(data);

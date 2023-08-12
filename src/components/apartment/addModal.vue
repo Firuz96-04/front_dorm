@@ -1,11 +1,9 @@
 <script setup>
-import { useStudentStore } from "@/store/student";
 import { ref, reactive, computed, defineEmits, defineProps } from "vue";
 import { useBuildingStore } from "@/store/building";
 import { useRoomTypeStore } from "@/store/room_type";
 import { useRoomStore } from "@/store/room";
 
-import { storeToRefs } from "pinia";
 
 const buildingStore = useBuildingStore();
 const roomtypeStore = useRoomTypeStore();
@@ -20,6 +18,8 @@ const props = defineProps({
     default: false,
   },
 });
+
+const visible = ref(my_open);
 const room_floor = ref(true);
 const floor_count = ref(1);
 const roomState = reactive({
@@ -54,6 +54,11 @@ const onSubmit = () => {
     cb: closeModal,
   });
 };
+
+
+const handleModalClose = () => {
+  visible.value = false;
+};
 </script>
 
 <template>
@@ -61,8 +66,8 @@ const onSubmit = () => {
     :maskClosable="false"
     :footer="null"
     width="400px"
-    :open="my_open"
-    @update:open="my_open = $event"
+    :open="visible"
+    @update:open="handleModalClose"
     :onCancel="closeModal"
   >
     <a-form

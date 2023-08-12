@@ -23,10 +23,11 @@ export const usePrivilegeStore = defineStore('privilege', {
 
         async addPrivilege(obj) {
             try {
-                const res = await http.get('/api/privilege', obj.privilege)
+                const res = await http.post('/api/privilege', obj.privilege)
                 const json = await res.data
                 this.privileges.push(json.data)
-                console.log(json);                
+                console.log(json);
+                obj.cb()            
             } catch (error) {
                 console.log(error);
             }
