@@ -24,10 +24,7 @@ export const useRoomStore = defineStore('room', {
             this.rooms.push(data)
             obj.cb()
         } catch (error) {
-            console.log(error, 'error');
-
-        }
-            
+            console.log(error, 'error'); }
         }
     }
 })

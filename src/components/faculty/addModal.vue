@@ -41,8 +41,7 @@ const addFaculty = () => {
     :maskClosable="false"
     :footer="null"
     :onCancel="myClose"
-    width="450px"
-    >
+    width="450px">
     <div style="margin-top: 15px">
       <a-form
         :model="formState"

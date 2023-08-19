@@ -1,7 +1,10 @@
 <script setup>
 import {ref, reactive, computed} from 'vue'
 import { useStudentStore } from "@/store/student";
+import { useFacultyStore } from "@/store/faculty";
+import { useCountryStore } from "@/store/country";
 import addModal from '@/components/student/addModal.vue'
+import {storeToRefs} from 'pinia'
 
 const columns = [
 {
@@ -71,41 +74,152 @@ const columns = [
     align: 'center'
   },
   {
+    name: "Добавлен",
+    dataIndex: "created_at",
+    key: "created_at",
+    width: 150,
+    align: 'center'
+  },
+  {
     key: "action",
     dataIndex: "action",
   },
 ]
 
 const studentStore = useStudentStore()
-
+const countryStore = useCountryStore()
+const facultyStore = useFacultyStore()
+const studentParams = ref({
+    page: 1
+})
 studentStore.setAllStudent()
+studentStore.studentCategory()
 const addIsModal = ref(false)
+const courses = [1,2,3,4,5,6]
 
-const students = computed(() => studentStore.getAllStudent )
+// const students = computed(() => studentStore.getAllStudent )
+const {getAllStudent} = storeToRefs(studentStore)
+const pagination = computed(() => studentStore.getPagination)
+const country = computed(() => countryStore.allCountry)
+const faculty = computed(() => facultyStore.getAllFaculty)
+const typeStudent = computed(() => studentStore.getStudentType)
 
 const showAdd = () => {
   addIsModal.value = true
+  console.log('add modal');
 }
 
+
+const student_filter = ref({
+  search: null,
+  country: null,
+  faculty: null,
+  type: null
+})
+const current1 = ref(1)
+
+const onShowSizeChange = (elem) => { console.log(elem, 'elem') }
+
+const pageSize = ref([
+  '4','8','16','32'
+])
+
+const handleCountry = () => {
+    console.log('country');
+}
+
+const handleFaculty = () => {
+    console.log('faculty');
+}
+const handleType = () => {
+    console.log('type');
+}
+
+const handleCourse = () => {
+    console.log('course');
+}
+
+const showHandle = (elem) => console.log(elem, 'show total');
+
+const closeAddModal = () => addIsModal.value = false
+const handleChange = (page, range) => {
+  // console.log('44');
+  studentStore.setAllStudent(studentParams.value)
+  
+}
+
+const pageSizeOptions = ref([
+        { value: 10, label: '10 items' },
+        { value: 20, label: '20 items' },
+        { value: 30, label: '30 items' },
+        { value: 50, label: '50 items' }, 
+])
+
+const bugg = () => {
+  console.log('ee');
+}
 </script>
 <template>
-  <a-button @click="showAdd"> add</a-button>
-<!-- 
-  <Teleport to="body"> -->
-      <addModal v-if="addIsModal"  :visible="addIsModal"/>
 
-      <!-- :visible="addIsModal" -->
-  <!-- </Teleport> -->
+    <a-row justify="start" style="margin-bottom: 10px;">
+      <a-col :span="3">
+          <a-input style="width: 150px" v-model:value="student_filter.search" placeholder="Студент" />
+      </a-col>
+      <a-col :span="4">
+        <a-select
+        ref="select"
+        v-model:value="student_filter.country"
+        style="width: 180px"
+        placeholder="Страна"
+        :options="country.map(item => ({value: item.id, label: item.name}))"
+        allowClear
+        @change="handleCountry"></a-select>
+     </a-col>
+      <a-col :span="4">
+        <a-select
+        ref="select"
+        v-model:value="student_filter.faculty"
+        style="width: 180px"
+        placeholder="Факультет"
+        :options="faculty.map(item => ({value: item.id, label: item.name}))"
+        allowClear
+        @change="handleFaculty"></a-select>
+      </a-col>
+      <a-col :span="4">
+        <a-select
+        ref="select"
+        v-model:value="student_filter.type"
+        style="width: 180px"
+        placeholder="Тип студента"
+        :options="typeStudent.map(item => ({value: item.id, label: item.type}))"
+        allowClear
+        @change="handleType"></a-select>
+      </a-col>
+      <a-col :span="4">
+        <a-select
+        ref="select"
+        v-model:value="student_filter.course"
+        style="width: 100px"
+        placeholder="Курс"
+        allowClear
+        @change="handleCourse">
+        <a-select-option v-for="item in courses" :value="item">{{ item }}</a-select-option>
+      </a-select>
+      </a-col>
+      <a-col :span="4">
+        <a-button @click="showAdd">Добавить</a-button>  
+      </a-col>
+      
+    </a-row>
+
 <a-table
     class="custom-table"
-    :data-source="students"
+    :data-source="getAllStudent"
     bordered
     :columns="columns"
     :pagination="false"
-    :scroll="{ y: 500, x: 400 }"
-    size="small"
-
-    >
+    :scroll="{ y: 500, x: 1400 }"
+    size="small">
     <template #headerCell="{ column }">
       <template v-if="column.key === 'rowIndex'">
           #
@@ -137,11 +251,14 @@ const showAdd = () => {
       <template v-else-if="column.key === 'gender'">
         {{ column.name }}
       </template>
+      <template v-else-if="column.key === 'created_at'">
+        {{ column.name }}
+      </template>
       <template v-else-if="column.key === 'action'"> !!! </template>
     </template>
 
-    <template #bodyCell="record">
-      <template v-if="record.column.dataIndex === 'rowIndex'">
+    <template #bodyCell="record" >
+      <template  v-if="record.column.dataIndex === 'rowIndex'">
         <span>{{ record.index + 1 }}</span>
       </template>
       <template v-else-if="record.column.dataIndex === 'name'">
@@ -167,8 +284,31 @@ const showAdd = () => {
             !!!!
       </template>
     </template>
-    <template #footer>Footer 33</template>
+    <template #footer>
+      <div class="custom-page-size-dropdown">
+      <span>Items per page: </span>
+      <select :v-model="4" @change="handlePageSizeChange">
+        <option v-for="option in pageSizeOptions" :value="option.value" :key="option.value">{{ option.label }}</option>
+      </select>
+      </div>
+      {{  }}
+      <a-pagination
+      v-model:current="studentParams.page"
+      :total="pagination.total"
+      :pageSize="pagination.page_size"
+      :show-ellipsis="true"
+      @change="handleChange"
+      size="small"
+    />
+
+    </template>
   </a-table>
+
+  <Teleport to="body">
+    <a-modal :maskClosable="false" v-model:open="addIsModal" footer=""  >
+        <addModal @close="closeAddModal"> </addModal>
+    </a-modal>
+  </Teleport>
 
 </template>
 

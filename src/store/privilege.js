@@ -18,7 +18,6 @@ export const usePrivilegeStore = defineStore('privilege', {
             const res = await http.get('/api/privilege')
             const json = await res.data
             this.privileges = json
-            console.log(json);
         },
 
         async addPrivilege(obj) {

@@ -2,10 +2,11 @@
 import { ref, reactive, computed } from "vue";
 import { useBuildingStore } from "@/store/building";
 import { useFreePlaceStore } from "@/store/free_place";
+import addModal from '@/components/free/addFree.vue'
 
 const buildStore = useBuildingStore();
 const freeStore = useFreePlaceStore();
-
+const addIsModal = ref(false)
 const buildings = computed(() => buildStore.allBuilding);
 const free_stores = computed(() => freeStore.getAllFreePlace);
 let timeout;
@@ -16,14 +17,14 @@ const search = ref({
   is_full: null,
   place: null,
 });
-
+const apartment = ref(null)
 const room_status = ref([
   {
-    value: 1,
+    value: 0,
     label: "свободно",
   },
   {
-    value: 0,
+    value: 1,
     label: "занято",
   },
 ]);
@@ -47,6 +48,7 @@ const room_place = ref([
   },
 ]);
 
+const closeAddModal = () => addIsModal.value = false
 freeStore.setAllFreePlace(search.value);
 const floor_count = ref([]);
 const handleSearchBuild = (elem) => {
@@ -76,6 +78,14 @@ const handleRoom = (elem) => {
     freeStore.setAllFreePlace(search.value);
   }, 500);
 };
+const bookHandle = (is_book, room) => {
+
+    if (!is_book) {
+          addIsModal.value = true
+          apartment.value = JSON.parse(JSON.stringify(room))
+    }
+
+}
 const columns = [
   {
     dataIndex: "rowIndex",
@@ -135,6 +145,17 @@ const columns = [
     align: "center",
   },
 ];
+
+// const my_row = (record) => {
+//   return {
+//     onClick: (event) => {
+//       if (event.target.cellIndex !== columns.length - 1) {
+//               // Handle row click event here
+//               console.log("Row clicked:", record);
+//             }
+//     }
+//  };
+// }
 </script>
 <template>
   <a-row justify="start" style="margin-bottom: 10px;">
@@ -145,10 +166,7 @@ const columns = [
         style="width: 180px"
         allowClear
         @change="handleSearchBuild"
-        :options="
-          buildings.map((elem) => ({ value: elem.id, label: elem.name }))
-        "
-      >
+        :options="buildings.map((elem) => ({ value: elem.id, label: elem.name }))">
       </a-select>
     </a-col>
     <a-col :span="3">
@@ -207,8 +225,7 @@ const columns = [
     :pagination="false"
     :scroll="{ y: 500 }"
     size="small"
-    class="my_table"
-  >
+    class="my_table">
     <template #headerCell="{ column }">
       <template v-if="column.name === 'number'">
         {{ column.name }}
@@ -225,18 +242,21 @@ const columns = [
       <template v-if="obj.column.dataIndex === 'number'">
         <span>{{ obj.text }} </span>
       </template>
-
       <template v-if="obj.column.dataIndex === 'action'">
         <a-button
           size="small"
-          :class="obj.record.is_full ? 'is_free' : 'is_busy'" type="text">
-          <span v-if="obj.record.is_full">Заселить</span>
+          @click="bookHandle(obj.record.is_full, obj.record)"
+          :class="!obj.record.is_full ? 'is_free' : 'is_busy'" type="text">
+          <span v-if="!obj.record.is_full">Заселить</span>
           <span v-else>Занято</span>
         </a-button>
       </template>
     </template>
     <template #footer>Footer</template>
   </a-table>
+  <Teleport to="body">
+      <addModal :my_open="addIsModal" :room_data="apartment" @close="closeAddModal" />
+  </Teleport>
 </template>
 <style scoped>
 .is_free {
@@ -247,5 +267,6 @@ const columns = [
 .is_busy {
   background-color: #ff4d6d;
   width: 80px;
+  cursor: auto
 }
 </style>

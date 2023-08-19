@@ -19,7 +19,6 @@ const props = defineProps({
   },
 });
 
-const visible = ref(my_open);
 const room_floor = ref(true);
 const floor_count = ref(1);
 const roomState = reactive({
@@ -27,6 +26,7 @@ const roomState = reactive({
   building: null,
   room_type: null,
   floor: null,
+  description: ''
 });
 const buildings = computed(() => buildingStore.allBuilding);
 const roomtypes = computed(() => roomtypeStore.AllRoomType);
@@ -57,7 +57,7 @@ const onSubmit = () => {
 
 
 const handleModalClose = () => {
-  visible.value = false;
+  // visible.value = false;
 };
 </script>
 
@@ -66,7 +66,7 @@ const handleModalClose = () => {
     :maskClosable="false"
     :footer="null"
     width="400px"
-    :open="visible"
+    :open="my_open"
     @update:open="handleModalClose"
     :onCancel="closeModal"
   >
@@ -119,14 +119,26 @@ const handleModalClose = () => {
           <a-select-option
             v-for="item in floor_count"
             :key="item"
-            :value="item"
-            >{{ item }}</a-select-option
-          >
+            :value="item">{{ item }}</a-select-option>
         </a-select>
       </a-form-item>
+      <a-form-item label="Описания" name="description">
+        <a-textarea
+        style="width: 200px"
+         v-model:value="roomState.description"
+         placeholder="Описания комнаты" :rows="4" />
+      </a-form-item>
+    
+
       <a-row justify="end">
         <a-button type="primary" @click.prevent="onSubmit">Добавит</a-button>
       </a-row>
     </a-form>
   </a-modal>
 </template>
+
+<style scoped>
+.ant-form-item {
+  margin-bottom: 10px !important;
+}
+</style>

@@ -25,8 +25,7 @@ const filterOption = (input, option) => {
 
 const handleSearch = (elem) => {
   studentStore.setAllStudent(name=elem)
-  console.log('bbb');
-  console.log(elem);
+
 }
 const students = computed(() => studentStore.getAllStudent)
 const value = ref(undefined);
