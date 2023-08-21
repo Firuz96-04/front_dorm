@@ -1,23 +1,43 @@
 <script setup>
 import { ref, reactive, computed } from "vue";
 import { useBookingStore } from "@/store/booking";
+import { useBuildingStore } from "@/store/building";
+import { useFacultyStore } from "@/store/faculty";
+
 import addModal from '@/components/booking/addModal.vue'
-import { PlusOutlined, FileExcelFilled, PlusSquareOutlined } from "@ant-design/icons-vue"
+import { PlusOutlined, FileExcelFilled } from "@ant-design/icons-vue"
 const useBooking = useBookingStore();
+const useBuilding = useBuildingStore()
+const facultyStore = useFacultyStore();
 
 const bookings = computed(() => useBooking.getAllBookings);
-
+const buildings = computed(() => useBuilding.allBuilding)
+const faculties = computed(() => facultyStore.getAllFaculty);
+let timeout;
 useBooking.setAllBooking();
-
+useBuilding.setAllBuilding()
+facultyStore.setAllFaculty()
 const open = ref(false);
 
 const book_filter = ref({
-  student: null,
+  search: null,
   faculty: null,
   building: null,
   room: null,
   gender: null
 })
+
+const genderOption = ref([
+{
+    value: "0",
+    label: "женшина",
+  },
+  {
+    value: "1",
+    label: "мужчина",
+  },
+
+])
 const showAddModal = () => {
   open.value = true
 }
@@ -65,7 +85,7 @@ const columns = [
         name: "Курс",
         title: "Курс",
         align: "center",
-        width: 50,
+        width: 60,
       },
       {
         dataIndex: "gender",
@@ -73,7 +93,7 @@ const columns = [
         name: "Пол",
         title: "Пол",
         align: "center",
-        width: 50,
+        width: 60,
       },
     ],
   },
@@ -101,7 +121,7 @@ const columns = [
         key: "floor",
         name: "Этаж",
         title: "Этаж",
-        width: 50,
+        width: 60,
         align: "center"
       },
     ],
@@ -120,6 +140,12 @@ const columns = [
         key: "payed",
         name: "Оплатил",
         title: "Оплатил",
+        align: "center"
+      },
+      {
+        key: "debt",
+        name: "Долг",
+        title: "Долг",
         align: "center"
       },
     ],
@@ -152,6 +178,46 @@ const closeAdd = () => {
   open.value = false
 }
 
+
+const genderFilter = () => {
+   useBooking.setAllBooking(book_filter.value);
+}
+
+const buildFilter = () => {
+  useBooking.setAllBooking(book_filter.value);
+}
+
+const facultyFilter = () => {
+  useBooking.setAllBooking(book_filter.value);
+}
+
+const studentFilter = (elem) => {
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = null;
+  }
+  timeout = setTimeout(() => {
+    useBooking.setAllBooking(book_filter.value);
+  }, 400);
+};
+
+const roomFilter = (elem) => {
+  if (timeout) {
+    clearTimeout(timeout);
+    timeout = null;
+  }
+  timeout = setTimeout(() => {
+    useBooking.setAllBooking(book_filter.value);
+  }, 400);
+}
+
+
+const my_cell = (record, rowIndex, column) => {
+    console.log(record, 'record');
+    console.log(column, 'record');
+
+}
+
 const localeConfig = ref({
   emptyText: 'refresh page'
 });
@@ -165,36 +231,40 @@ const localeConfig = ref({
     <a-row justify="start" style="margin-bottom: 10px;">
       <a-col :span="3"> 
         <a-input 
-          v-model:value="book_filter.student" 
+          v-model:value="book_filter.search" 
           placeholder="Студент"
           :maxlength="15"
+          @change="studentFilter"
           allowClear
           />
       </a-col>
       <a-col :span="4">
         <a-select 
            v-model:value="book_filter.faculty" 
-           :options="[]"
+           :options="faculties.map(item => ({value: item.id, label: item.name}))"
            style="width: 100%"
            placeholder="Факультет"
            allowClear
+           @change="facultyFilter"
            ></a-select>
       </a-col>
       <a-col :span="2">
         <a-select 
            v-model:value="book_filter.gender" 
-           :options="[]"
+           :options="genderOption"
            style="width: 100%"
            placeholder="Пол"
            allowClear
+           @change="genderFilter"
            ></a-select>
       </a-col>
       <a-col :span="3">
         <a-select 
            v-model:value="book_filter.building" 
-           :options="[]"
+           :options="buildings.map(item => ({value: item.id, label: item.name}))"
            style="width: 100%"
            placeholder="Здания"
+           @change="buildFilter"
            allowClear
            ></a-select>
       </a-col>
@@ -203,6 +273,7 @@ const localeConfig = ref({
           v-model:value="book_filter.room"
           placeholder="Комната"
           :maxlength="4"
+          @change="roomFilter"
           allowClear
           />
       </a-col>
@@ -216,7 +287,8 @@ const localeConfig = ref({
     :locale="localeConfig"
     :pagination="false"
     size="small"
-    :scroll="{ y: 'calc(100vh - 200px)', x: 1500 }">
+    :customCell="my_cell"
+    :scroll="{ y: 'calc(100vh - 200px)', x: 1700 }">
 
     <template #headerCell="{ column }">
       <template v-if="column.key === 'name'">
@@ -234,15 +306,14 @@ const localeConfig = ref({
         </span>
       </template>
       <template v-if="obj.column.key === 'full_name'">
-        <span>
-          {{ obj.record.student?.full_name }}
-        </span>
+        <div style="text-align: left"><span>{{ obj.record.student?.full_name }}</span></div>
       </template>
       <template v-else-if="obj.column.key === 'country'">
         <span>
           {{ obj.record.student.country.name }}
         </span>
       </template>
+      
       <template v-else-if="obj.column.key === 'faculty'">
         <span>
           {{ obj.record.student.faculty.name }}
@@ -258,13 +329,19 @@ const localeConfig = ref({
           {{ obj.record.room.building }}
         </span>
       </template>
+      
       <template v-else-if="obj.column.key === 'floor'">
-        <span>
+        <td class="custom-cell" :style="{ backgroundColor: obj.record.room.floor == 1 ? 'red' : 'blue' }">
+
           {{ obj.record.room.floor }}
-        </span>
+        </td>
+        <!-- <span>
+          {{ obj.record.room.floor }}
+        </span> -->
       </template>
       
       <template v-else-if="obj.column.key === 'course'">
+
         <span>{{ obj.record.student.course }}</span>
       </template>
       <template v-else-if="obj.column.key === 'gender'">
@@ -291,6 +368,13 @@ const localeConfig = ref({
           {{ obj.record.payed }}
         </span>
       </template>
+      
+      <template v-else-if="obj.column.key === 'debt'">
+        <span>
+          {{ obj.record.debt }}
+        </span>
+      </template>
+
     </template>
     <template #footer>
 ss
@@ -308,7 +392,20 @@ ss
 
 <style scoped>
 .ant-row .ant-col{
-  background-color: rgb(29, 211, 150);
+  /* background-color: rgb(29, 211, 150); */
   margin-right: 15px;
+}
+.custom-cell {
+  padding: 0; /* Убрать отступы */
+  margin: 0; /* Убрать отступы */
+  background-color: inherit;
+  border-radius: 0; /* Убрать закругление углов */
+  line-height: 1; /* Установить высоту строки на 1 */
+  color: white; /* Установить цвет текста */
+  width: 100%; /* Заполнить ячейку полностью */
+  height: 100%; /* Заполнить ячейку полностью */
+  display: flex; /* Добавить flex для выравнивания текста */
+  align-items: center; /* Выравнивание текста по центру */
+  justify-content: center; /* Выравнивание текста по центру */
 }
 </style>

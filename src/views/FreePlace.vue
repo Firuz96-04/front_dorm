@@ -3,12 +3,13 @@ import { ref, reactive, computed } from "vue";
 import { useBuildingStore } from "@/store/building";
 import { useFreePlaceStore } from "@/store/free_place";
 import addModal from '@/components/free/addFree.vue'
-
+import showTenant from '@/components/free/showTenant.vue'
 const buildStore = useBuildingStore();
 const freeStore = useFreePlaceStore();
 const addIsModal = ref(false)
 const buildings = computed(() => buildStore.allBuilding);
 const free_stores = computed(() => freeStore.getAllFreePlace);
+const isTenant = ref(false)
 let timeout;
 const search = ref({
   building: null,
@@ -146,16 +147,17 @@ const columns = [
   },
 ];
 
-// const my_row = (record) => {
-//   return {
-//     onClick: (event) => {
-//       if (event.target.cellIndex !== columns.length - 1) {
-//               // Handle row click event here
-//               console.log("Row clicked:", record);
-//             }
-//     }
-//  };
-// }
+const my_row = (record) => {
+  return {
+    onClick: (event) => {
+      if (event.target.cellIndex !== columns.length - 1) {
+              // Handle row click event here
+              isTenant.value = true
+              console.log("Row clicked:", record);
+            }
+    }
+ };
+}
 </script>
 <template>
   <a-row justify="start" style="margin-bottom: 10px;">
@@ -225,7 +227,9 @@ const columns = [
     :pagination="false"
     :scroll="{ y: 500 }"
     size="small"
-    class="my_table">
+    class="my_table"
+    :customRow="my_row"
+    >
     <template #headerCell="{ column }">
       <template v-if="column.name === 'number'">
         {{ column.name }}
@@ -245,7 +249,7 @@ const columns = [
       <template v-if="obj.column.dataIndex === 'action'">
         <a-button
           size="small"
-          @click="bookHandle(obj.record.is_full, obj.record)"
+          @click.stop="bookHandle(obj.record.is_full, obj.record)"
           :class="!obj.record.is_full ? 'is_free' : 'is_busy'" type="text">
           <span v-if="!obj.record.is_full">Заселить</span>
           <span v-else>Занято</span>
@@ -256,6 +260,7 @@ const columns = [
   </a-table>
   <Teleport to="body">
       <addModal :my_open="addIsModal" :room_data="apartment" @close="closeAddModal" />
+      <a-modal v-model:open="isTenant" width="70%" footer="">  <showTenant/> </a-modal>
   </Teleport>
 </template>
 <style scoped>
